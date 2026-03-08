@@ -12,7 +12,8 @@
     </parent>
 
     <artifactId>sbae-database</artifactId>
-    <name>SIECLE diaman - Database</name>
+
+    <name>Sbae - Database</name>
     <description>Contient les scripts de base de données</description>
 
 </project>

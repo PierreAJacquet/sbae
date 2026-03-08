@@ -10,3 +10,8 @@ __Lancement du projet.__
     3. Vérifie le lancement dans les logs ainsi que l'exécution des scripts
 
 ------ _BackEnd_ ----------
+
+    1. Se positionner à la racine du projet sbea
+    2. Lancer la commande mvn clean install
+    3. Lancer la commande mvn spring-boot:run
+    4. Vérifier dans la console que l'application a bien démarré
