@@ -10,6 +10,10 @@
 
   <name>sbae</name>
 
+  <modules>
+    <module>sbae-database</module>
+  </modules>
+
   <properties>
     <!-- Maven -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

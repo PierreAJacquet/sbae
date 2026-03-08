@@ -1,0 +1,8 @@
+# Forcer les fichiers texte importants en LF (Format Linux/Unix)
+*.sql text eol=lf
+*.sh text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Documentation
+*.md text

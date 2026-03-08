@@ -1,0 +1,27 @@
+name: spring-boot-angular-test
+
+services:
+  database:
+    image: postgres:17
+    container_name: incident-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Scripts d'initialisation automatique
+      - ./scripts-sql/01-ddl.sql:/docker-entrypoint-initdb.d/01-ddl.sql
+      - ./scripts-sql/02-data.sql:/docker-entrypoint-initdb.d/02-data.sql
+    # Le healthcheck permet au futur container Backend d'attendre que la base de données soit réellement prête avant de tenter de s'y connecter.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

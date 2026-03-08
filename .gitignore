@@ -1,5 +1,9 @@
 target/
 
+### DATABASE ###
+.env
+pgdata/
+
 ### ECLIPSE ###
 .apt_generated
 .classpath
