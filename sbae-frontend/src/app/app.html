@@ -1,0 +1,86 @@
+<div class="app-container">
+  <h1>Gestion des Incidents</h1>
+
+  <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="filter-card">
+    <div class="form-grid">
+      <div class="field">
+        <label>Titre</label>
+        <input type="text" formControlName="title">
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <input type="text" formControlName="description">
+      </div>
+      <div class="field">
+        <label>Sévérité</label>
+        <select formControlName="severity">
+          <option value="">-- Sélectionner --</option>
+          <option value="LOW">LOW</option>
+          <option value="MEDIUM">MEDIUM</option>
+          <option value="HIGH">HIGH</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Prénom</label>
+        <input type="text" formControlName="firstName">
+      </div>
+      <div class="field">
+        <label>Nom</label>
+        <input type="text" formControlName="lastName">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" formControlName="email">
+        @if (searchForm.get('email')?.errors?.['email'] && searchForm.get('email')?.touched) {
+          <small class="error-text">
+            Format d'email invalide.
+          </small>
+        }
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" [disabled]="loading || searchForm.invalid">
+        {{ loading ? 'Recherche...' : 'Rechercher' }}
+      </button>
+    </div>
+  </form>
+
+  @if (searchDuration !== null){
+    <div class="stats-panel">
+      Dernière requête exécutée en : <strong>{{ searchDuration | number:'1.3-3' }} secondes</strong>.
+    </div>
+  }
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+      <tr>
+        <th>Titre</th>
+        <th>Sévérité</th>
+        <th>Date</th>
+        <th>Owner (Nom & Prénom)</th>
+        <th>Email Owner</th>
+      </tr>
+      </thead>
+      <tbody>
+      @for (incident of results; track incident.id) {
+        <tr>
+          <td>{{ incident?.title }}</td>
+          <td>
+            <span class="severity-tag" [attr.data-severity]="incident.severity">
+              {{ incident?.severity }}
+            </span>
+          </td>
+          <td>{{ incident?.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ incident?.owner?.lastName }} {{ incident?.owner?.firstName }}</td>
+          <td>{{ incident?.owner?.email }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" style="text-align: center;">Aucun résultat trouvé</td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  </div>
+</div>

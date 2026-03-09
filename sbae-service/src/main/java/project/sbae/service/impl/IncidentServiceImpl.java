@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.sbae.dto.IncidentDto;
+import project.sbae.dto.searchFilterDto;
 import project.sbae.entity.Person;
 import project.sbae.mapper.IncidentMapper;
 import project.sbae.repository.IncidentRepository;
@@ -24,16 +25,22 @@ public class IncidentServiceImpl implements IncidentService {
     private IncidentMapper mapper;
 
     @Override
-    public List<IncidentDto> searchIncidents(String title, String description, String severity, Person person) {
+    public List<IncidentDto> searchIncidents(searchFilterDto searchFilterDto) {
+
+        // Reprise des paramètres en objets personnes
+        Person filterPerson = new Person();
+        filterPerson.setFirstName(searchFilterDto.getTitle());
+        filterPerson.setLastName(searchFilterDto.getDescription());
+        filterPerson.setEmail(searchFilterDto.getSeverity());
 
         // TODO A reprendre pour faire le filtrage directement dans le repo via EntityGraph ou @Query
         return mapper.mapAllToDto(
                 repository.findAll()
                         .stream()
-                        .filter(incident -> matches(title, incident.getTitle()))
-                        .filter(incident -> matches(description, incident.getDescription()))
-                        .filter(incident -> matches(severity, incident.getSeverity()))
-                        .filter(incident -> matchesPerson(person, incident.getPerson()))
+                        .filter(incident -> matches(searchFilterDto.getTitle(), incident.getTitle()))
+                        .filter(incident -> matches(searchFilterDto.getDescription(), incident.getDescription()))
+                        .filter(incident -> matches(searchFilterDto.getSeverity(), incident.getSeverity()))
+                        .filter(incident -> matchesPerson(filterPerson, incident.getPerson()))
                         .collect(Collectors.toList())
         );
     }

@@ -15,3 +15,9 @@ __Lancement du projet.__
     2. Lancer la commande mvn clean install
     3. Lancer la commande mvn spring-boot:run
     4. Vérifier dans la console que l'application a bien démarré
+
+------ _FrontEnd_ ----------
+
+    1. Se positionner à la racine du dossier sbae-frontEnd et lancer la commande npm install
+    2. Une fois finie, lancer la commande ng-serve
+    3. La page sera accessible à l'url http://localhost:4200/

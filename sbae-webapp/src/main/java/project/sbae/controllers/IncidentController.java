@@ -7,13 +7,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import project.sbae.dto.searchFilterDto;
 import project.sbae.dto.IncidentDto;
-import project.sbae.entity.Person;
 import project.sbae.service.IncidentService;
 
 import java.util.List;
@@ -21,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @Tag(name = "Sbae")
-@RequestMapping(path = "/api/incident", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/incidents", produces = MediaType.APPLICATION_JSON_VALUE)
 public class IncidentController {
 
     @Autowired
@@ -29,26 +25,18 @@ public class IncidentController {
 
     @Operation(summary = "Retourne une liste d'incident selon les paramètres définit")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "204", description = "Appel valide mais aucun contenue"),
             @ApiResponse(responseCode = "400", description = "Paramètres invalides"),
             @ApiResponse(responseCode = "404", description = "Ressource non trouvée"),
             @ApiResponse(responseCode = "500", description = "Erreur technique")})
-    @GetMapping("/search")
-    public List<IncidentDto> search(
-            @RequestParam(name = "title", required = false) String title,
-            @RequestParam(name = "description", required = false) String description,
-            @RequestParam(name = "severity", required = false) String severity,
-            @RequestParam(name = "firstName", required = false) String firstName,
-            @RequestParam(name = "lastName", required = false) String lastName,
-            @RequestParam(name = "email", required = false) String email
-    ) {
-
-        // TODO A reprendre pour recevoir directement un objet Person depuis le Front
-        // Reprise des paramètres en objets personnes
-        Person filterPerson = new Person();
-        filterPerson.setFirstName(firstName);
-        filterPerson.setLastName(lastName);
-        filterPerson.setEmail(email);
-
-        return incidentService.searchIncidents(title, description, severity, filterPerson);
+    /* Post est plus adapté que Get dans ce contexte.
+     RequestBody permet :
+     1. Clarté : Le contrat entre le front et le back est défini par un DTO, ce qui limite les erreurs de nommage de paramètres.
+     2. Évolutivité : L'ajout d'un nouveau filtre modifie uniquement le DTO sans changer la signature de la méthode.
+     3. Confort : Simplifie la gestion des données nulles ou vides.
+     */
+    @PostMapping("/search-incidents")
+    public List<IncidentDto> searchIncidents(@RequestBody searchFilterDto searchFilterDto) {
+        return incidentService.searchIncidents(searchFilterDto);
     }
 }
