@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ReactiveFormsModule, FormGroup, FormControl, Validators} from '@angular/forms';
 import { IncidentService } from './services/incident.service';
@@ -29,7 +29,8 @@ export class AppComponent {
   searchDuration: number | null = null;
   loading = false;
 
-  constructor(private readonly incidentService: IncidentService) {}
+  constructor(private incidentService: IncidentService,
+              private cdr: ChangeDetectorRef) {}
 
   onSearch() {
     if (this.searchForm.invalid) {
@@ -42,13 +43,21 @@ export class AppComponent {
     // Appel au service pour les résultats et la mesure de performance
     this.incidentService.searchWithTiming(filters).subscribe({
       next: (response) => {
-        this.results = response.data;
-        this.searchDuration = response.duration; // Temps de calcul côté front
+        console.log('1. Réponse brute API:', response);
+        this.results = [...response.data];
+        console.log('2. Contenu de this.results:', this.results);
+
+        // Temps de calcul côté front
+        this.searchDuration = response.duration;
         this.loading = false;
+        // Force angular à détecter les changements suite à la réponse de l'api
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erreur API:', err);
         this.loading = false;
+        // Forcer pour enlever le loader en cas d'erreur
+        this.cdr.detectChanges();
       }
     });
   }

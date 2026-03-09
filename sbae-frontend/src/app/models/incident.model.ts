@@ -5,6 +5,6 @@ export interface Incident {
   title: string;
   description: string;
   severity: string;
-  owner: Person;
+  person: Person;
   createdAt: Date;
 }

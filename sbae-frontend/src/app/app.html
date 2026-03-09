@@ -58,28 +58,28 @@
         <th>Titre</th>
         <th>Sévérité</th>
         <th>Date</th>
-        <th>Owner (Nom & Prénom)</th>
-        <th>Email Owner</th>
+        <th>Nom Prénom</th>
+        <th>Email</th>
       </tr>
       </thead>
       <tbody>
-      @for (incident of results; track incident.id) {
-        <tr>
-          <td>{{ incident?.title }}</td>
-          <td>
+        @for (incident of results; track incident.id) {
+          <tr>
+            <td>{{ incident?.title }}</td>
+            <td>
             <span class="severity-tag" [attr.data-severity]="incident.severity">
               {{ incident?.severity }}
             </span>
-          </td>
-          <td>{{ incident?.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ incident?.owner?.lastName }} {{ incident?.owner?.firstName }}</td>
-          <td>{{ incident?.owner?.email }}</td>
-        </tr>
-      } @empty {
-        <tr>
-          <td colspan="5" style="text-align: center;">Aucun résultat trouvé</td>
-        </tr>
-      }
+            </td>
+            <td>{{ incident?.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ incident?.person?.lastName }} {{ incident?.person?.firstName }}</td>
+            <td>{{ incident?.person?.email }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" style="text-align: center;">Aucun résultat trouvé</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
