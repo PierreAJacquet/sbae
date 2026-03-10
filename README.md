@@ -7,7 +7,7 @@ Ce projet à pour but de développer une application web simple en Spring Boot e
 | Technologie                     | Utilisation |
 |:--------------------------------| :--- |
 | **Java 25 / Spring Boot 3.5.6** | Backend & API Rest |
-| **Angular 20**                  | Frontend Standalone |
+| **Angular 21**                  | Frontend Standalone |
 | **PostgreSQL**                  | Stockage & Indexation |
 | **JPA / Hibernate**             | ORM & Mapping |
 
@@ -27,8 +27,9 @@ L'infrastructure repose sur un conteneur PostgreSQL géré par Docker Compose.
 
 ### ☕ 2. Backend (Spring Boot)
 Le serveur API gère la logique métier et l'accès aux données.
+Les versions nécessaires sont Java 25 et Maven 3.5.X
 
-1. Se positionner à la racine du projet sbea.
+1. Se positionner dans le module sbea-webapp.
 2. Compiler et installer les dépendances :
     ```bash
     mvn clean install
@@ -38,9 +39,9 @@ Le serveur API gère la logique métier et l'accès aux données.
 4. Vérification : Attendre le message ```Started SbaeApplication``` dans la console.
 
 ### 🅰️ 3. Frontend (Angular)
-L'interface utilisateur nécessite Node.js 20+ et Angular CLI.
+L'interface utilisateur nécessite Node.js 20+ et Npm.
 
-1. Se positionner dans le dossier sbae-frontEnd.
+1. Se positionner dans le dossier sbae-frontend.
 2. Installer les packages :
     ```bash
     npm install
@@ -66,4 +67,3 @@ L'interface utilisateur nécessite Node.js 20+ et Angular CLI.
 | **@Query SQL (Optimisé)** | **2.389s**  | **31,5%** |
 
 > **Analyse** : Le moteur SQL est conçu pour filtrer des millions de lignes via des algorithmes optimisés. Réduction importante du nombre de requêtes.
-
