@@ -46,8 +46,24 @@ L'interface utilisateur nécessite Node.js 20+ et Angular CLI.
     npm install
 3. Lancer le serveur de développement :
     ```bash
-    ng serve
+    ng start
 4. Accès : L'application est disponible sur http://localhost:4200/
 
 ---
+
+## 📉 Analyse des Performances & Optimisation
+
+#### 🚀 Étape 1 : Optimisation de la couche de données (Requêtes @Query JPQL)
+
+* **Mécanisme** : Remplacement du filtrage par Stream Java (côté applicatif) par une requête SQL paramétrée (côté serveur de base de données).
+* **Impact** : Suppression du chargement massif en RAM. Seuls les résultats filtrés transitent sur le réseau entre PostgreSQL et Spring Boot.
+* **Correction** : Lors de l'optimisation, reprise de la logique pour inclure des "like' au lieu d'égalité stricte (Influe sur le gain constaté)
+* **Test** : Pour les deux scénarios de mesure, demande de récupération de l'ensemble des lignes de la base.
+
+| Méthode | Temps Moyen |   Gain    |
+| :--- |:-----------:|:---------:|
+| **Stream Java (Initial)** | **3.488s**  |     -     |
+| **@Query SQL (Optimisé)** | **2.389s**  | **31,5%** |
+
+> **Analyse** : Le moteur SQL est conçu pour filtrer des millions de lignes via des algorithmes optimisés. Réduction importante du nombre de requêtes.
 
