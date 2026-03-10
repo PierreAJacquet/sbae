@@ -97,23 +97,47 @@
     </table>
   </div>
 
-  @if (totalPages > 1) {
-    <div class="pagination-actions" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px;">
-      <button class="btn-pagination"
-              (click)="changePage(-1)"
-              [disabled]="loading || currentPage === 0">
-        &laquo; Précédent
-      </button>
+  @if (totalElements > 0) {
+    <div class="pagination-container">
 
-      <span class="page-info">
-        Page <strong>{{ currentPage + 1 }}</strong> sur {{ totalPages }}
-      </span>
+      <div class="pagination-settings">
+        <label for="pageSize">Afficher</label>
+        <select id="pageSize" (change)="onPageSizeChange($event)" [value]="pageSize" class="size-select">
+          @for (size of pageSizes; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+        <span>incidents par page</span>
+      </div>
 
-      <button class="btn-pagination"
-              (click)="changePage(1)"
-              [disabled]="loading || (currentPage + 1) >= totalPages">
-        Suivant &raquo;
-      </button>
+      <div class="pagination-actions">
+        <button class="btn-pagination"
+                (click)="changePage(-1)"
+                [disabled]="loading || currentPage === 0">
+          &laquo; Précédent
+        </button>
+
+        <div class="page-jump">
+          <span>Page</span>
+          <input type="number"
+                 [value]="currentPage + 1"
+                 (keyup.enter)="goToPage($event)"
+                 (blur)="goToPage($event)"
+                 [class.invalid-input]="isPageInvalid"
+                 class="page-input">
+          <span>sur {{ totalPages }}</span>
+        </div>
+
+        <button class="btn-pagination"
+                (click)="changePage(1)"
+                [disabled]="loading || (currentPage + 1) >= totalPages">
+          Suivant &raquo;
+        </button>
+      </div>
+
+      <div class="pagination-info">
+        Total : <b>{{ totalElements | number }}</b>
+      </div>
     </div>
   }
 

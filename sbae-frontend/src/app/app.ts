@@ -26,13 +26,15 @@ export class AppComponent {
 
   results: Incident[] = [];
   searchDuration: number | null = null;
-  loading = false;
+  loading: boolean = false;
+  isPageInvalid: boolean = false;
 
   // Pagination
-  totalElements = 0;
-  totalPages = 0;
-  currentPage = 0;
-  pageSize = 10;
+  totalElements: number = 0;
+  totalPages: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  pageSizes: number[] = [10, 20, 50, 100];
 
   constructor(private readonly incidentService: IncidentService,
               private readonly cdr: ChangeDetectorRef) {}
@@ -71,9 +73,33 @@ export class AppComponent {
     });
   }
 
-  // Méthode pour changer de page
   changePage(delta: number) {
     this.currentPage += delta;
     this.onSearch(false); // false car on veut garder les filtres actuels
+  }
+
+  onPageSizeChange(event: any) {
+    this.pageSize = +event.target.value;
+    this.currentPage = 0;
+    this.onSearch(false);
+  }
+
+  goToPage(event: any) {
+    const pageIdx = Number.parseInt(event.target.value, 10) - 1;
+
+    if (!Number.isNaN(pageIdx) && pageIdx >= 0 && pageIdx < this.totalPages) {
+      this.isPageInvalid = false;
+      this.currentPage = pageIdx;
+      // On garde les filtres, on change juste la page
+      this.onSearch(false);
+    } else {
+      this.isPageInvalid = true;
+      // On remet la valeur correcte après 1.5 seconde
+      setTimeout(() => {
+        event.target.value = this.currentPage + 1;
+        this.isPageInvalid = false;
+        this.cdr.detectChanges();
+      }, 1500);
+    }
   }
 }
