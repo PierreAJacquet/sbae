@@ -16,6 +16,7 @@ services:
       # Scripts d'initialisation automatique
       - ./sbae-database/scripts-sql/01-ddl.sql:/docker-entrypoint-initdb.d/01-ddl.sql
       - ./sbae-database/scripts-sql/02-data.sql:/docker-entrypoint-initdb.d/02-data.sql
+      - ./sbae-database/scripts-sql/03-indexes.sql:/docker-entrypoint-initdb.d/03-indexes.sql
     # Le healthcheck permet au futur container Backend d'attendre que la base de données soit réellement prête avant de tenter de s'y connecter.
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]

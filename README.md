@@ -67,3 +67,18 @@ L'interface utilisateur nécessite Node.js 20+ et Npm.
 | **@Query SQL (Optimisé)** | **2.389s**  | **31,5%** |
 
 > **Analyse** : Le moteur SQL est conçu pour filtrer des millions de lignes via des algorithmes optimisés. Réduction importante du nombre de requêtes.
+
+#### ⚡ Étape 2 : Indexation des colonnes (PostgreSQL Indexing)
+
+* **Mécanisme** : Mise en place d'index **GIN (Generalized Inverted Index)** avec l'extension `pg_trgm` pour optimiser les recherches textuelles partielles (`LIKE`).
+* **Objectif** : Passer d'un *Sequential Scan* (lecture totale de la table) à un *Index Scan* (accès direct aux données).
+* **Test** : Pour les deux scénarios de mesure, demande de récupération de l'ensemble des lignes de la base.
+
+
+| Méthode | Temps Moyen |   Gain    |
+| :--- |:-----------:|:---------:|
+| **Filtrage SQL (@Query seul)** | **2.389s**  |     -     |
+| **Filtrage SQL + Indexation** | **1.589s**  | **33,5%** |
+
+> **Analyse technique** : L'index GIN permet à PostgreSQL de découper les mots en trigrammes. Lors d'une recherche, le moteur ne parcourt plus la table mais consulte l'index, ce qui réduit la complexité de recherche de manière drastique, surtout sur des volumes de 100 000+ lignes.
+
