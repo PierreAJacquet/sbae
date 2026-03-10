@@ -17,8 +17,8 @@ INSERT INTO person (last_name, first_name, email) VALUES
 
 INSERT INTO incident (title, description, severity, owner_id, created_at)
 SELECT
-  'Incident ' || md5(random()::text),
-  'Description: ' || md5(random()::text),
+  left('Incident ' || md5(random()::text), 100),
+  left('Description: ' || md5(random()::text), 255),
   CASE WHEN random() < 0.33 THEN 'LOW' WHEN random() < 0.66 THEN 'MEDIUM' ELSE 'HIGH' END,
   FLOOR(RANDOM() * ((SELECT MAX(id) FROM person) - (SELECT MIN(id) FROM person) + 1)) + (SELECT MIN(id) FROM person),
   NOW() - (random() * interval '365 days')

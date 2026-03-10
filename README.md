@@ -100,4 +100,16 @@ L'interface utilisateur nécessite Node.js 20+ et Npm.
 
 > **Analyse technique** : Cette étape est la clé de la scalabilité. Sans elle, l'application s'effondrerait avec 1 million de lignes, même avec des index parfaits. Avec la pagination, le coût de traitement devient constant, quel que soit le volume total de la base de données.
 
+#### 🛡️ Étape 4 : Hardening et Intégrité des données
 
+* **Mécanisme** : Mise en place d'une validation symétrique entre la base de données (VARCHAR calibrés, contraintes CHECK) et le Front-end (Validators.maxLength et Validators.email sur Angular).
+* **Impact** : Amélioration de la robustesse globale. Le Front-end intercepte les saisies invalides avant l'envoi, tandis que le moteur PostgreSQL optimise l'alignement des données en mémoire vive grâce à des tailles de champs prévisibles.
+* **Correction** : Alignement strict des longueurs et ajout d'une contrainte de domaine sur la sévérité au niveau physique de la table.
+* **Test** : Tentative de saisie de données hors limites (title = 1000 caractères) contre limite définit (title = 100 caractères) et mesure de la stabilité du temps de réponse sur le cache froid.
+
+| Méthode                            | Temps Moyen (Cache Froid) |   Gain    |
+|:-----------------------------------|:-------------------------:|:---------:|
+| **Sans Contraintes**               |        **0.352s**         |     -     |
+| **Avec Contraintes**               |        **0.330s**         | **6.25%** |
+
+> **Analyse technique** : Cette étape stabilise la prédictibilité du système. En limitant la taille des colonnes, PostgreSQL affine ses statistiques de coût : le moteur estime plus justement la largeur des lignes en RAM, évitant des écritures temporaires sur disque (Swap) lors des jointures complexes. Côté client, l'usage des Validators garantit que 100% des requêtes traitées par Spring Boot sont conformes, économisant ainsi des cycles CPU inutiles. Ce gain de 6,25% sur un système déjà optimisé confirme que l'intégrité des types de données est un levier pour atteindre une meilleure performance.

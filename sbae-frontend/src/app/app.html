@@ -4,16 +4,22 @@
   <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="filter-card">
     <div class="form-grid">
       <div class="field">
-        <label>Titre</label>
-        <input type="text" formControlName="title">
+        <label for="title">Titre</label>
+        <input id="title" type="text" formControlName="title">
+        @if (searchForm.get('title')?.errors?.['maxlength'] && searchForm.get('title')?.touched) {
+          <small class="error-text">Le titre ne doit pas dépasser 100 caractères.</small>
+        }
       </div>
       <div class="field">
-        <label>Description</label>
-        <input type="text" formControlName="description">
+        <label for="description">Description</label>
+        <input id="description" type="text" formControlName="description">
+        @if (searchForm.get('description')?.errors?.['maxlength'] && searchForm.get('description')?.touched) {
+          <small class="error-text">Description trop longue (max 255).</small>
+        }
       </div>
       <div class="field">
-        <label>Sévérité</label>
-        <select formControlName="severity">
+        <label for="severite">Sévérité</label>
+        <select id="severite" formControlName="severity">
           <option value="">-- Sélectionner --</option>
           <option value="LOW">LOW</option>
           <option value="MEDIUM">MEDIUM</option>
@@ -21,16 +27,22 @@
         </select>
       </div>
       <div class="field">
-        <label>Prénom</label>
-        <input type="text" formControlName="firstName">
+        <label for="lastName">Nom</label>
+        <input id="lastName" type="text" formControlName="lastName">
+        @if (searchForm.get('lastName')?.errors?.['maxlength'] && searchForm.get('lastName')?.touched) {
+          <small class="error-text">Le nom ne doit pas dépasser 50 caractères.</small>
+        }
       </div>
       <div class="field">
-        <label>Nom</label>
-        <input type="text" formControlName="lastName">
+        <label for="firstName">Prénom</label>
+        <input id="firstName" type="text" formControlName="firstName">
+        @if (searchForm.get('firstName')?.errors?.['maxlength'] && searchForm.get('firstName')?.touched) {
+          <small class="error-text">Le nom ne doit pas dépasser 50 caractères.</small>
+        }
       </div>
       <div class="field">
-        <label>Email</label>
-        <input type="text" formControlName="email">
+        <label for="email">Email</label>
+        <input id="email" type="text" formControlName="email">
         @if (searchForm.get('email')?.errors?.['email'] && searchForm.get('email')?.touched) {
           <small class="error-text">
             Format d'email invalide.

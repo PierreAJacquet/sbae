@@ -15,13 +15,12 @@ import { SearchFilter } from './models/search-filter.model';
 export class AppComponent {
 
   // Initialisation du formulaire avec les 6 champs du SearchFilter
-  // TODO Validateur pour les controles sur le formulaire
   searchForm = new FormGroup({
-    title: new FormControl(''),
-    description: new FormControl(''),
+    title: new FormControl('', Validators.maxLength(100)),
+    description: new FormControl('', Validators.maxLength(255)),
     severity: new FormControl(''),
-    lastName: new FormControl(''),
-    firstName: new FormControl(''),
+    lastName: new FormControl('', Validators.maxLength(50)),
+    firstName: new FormControl('', Validators.maxLength(50)),
     email: new FormControl('', [Validators.email])
   });
 
@@ -35,8 +34,8 @@ export class AppComponent {
   currentPage = 0;
   pageSize = 10;
 
-  constructor(private incidentService: IncidentService,
-              private cdr: ChangeDetectorRef) {}
+  constructor(private readonly incidentService: IncidentService,
+              private readonly cdr: ChangeDetectorRef) {}
 
   onSearch(resetPage: boolean = true) {
     if (this.searchForm.invalid) {
