@@ -101,6 +101,54 @@ td {
 
 tr:hover { background: #f9f9f9; }
 
+/* Conteneur de la pagination */
+.pagination-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f1f3f5; /* Gris très léger pour délimiter la zone */
+  border-radius: 12px;
+}
+
+/* Style des boutons */
+.btn-pagination {
+  padding: 10px 20px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #007bff; /* Bleu primaire */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Effet au survol */
+.btn-pagination:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* État désactivé (quand on ne peut plus cliquer) */
+.btn-pagination:disabled {
+  background-color: #ced4da; /* Gris moyen */
+  color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Texte entre les boutons */
+.page-info {
+  font-size: 1rem;
+  color: #495057;
+  font-family: sans-serif;
+}
+
 /* Tags de sévérité */
 .severity-tag {
   padding: 3px 8px;

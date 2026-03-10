@@ -29,23 +29,33 @@ export class AppComponent {
   searchDuration: number | null = null;
   loading = false;
 
+  // Pagination
+  totalElements = 0;
+  totalPages = 0;
+  currentPage = 0;
+  pageSize = 10;
+
   constructor(private incidentService: IncidentService,
               private cdr: ChangeDetectorRef) {}
 
-  onSearch() {
+  onSearch(resetPage: boolean = true) {
     if (this.searchForm.invalid) {
       return;
+    }
+
+    if (resetPage) {
+      this.currentPage = 0;
     }
 
     this.loading = true;
     const filters = this.searchForm.value as SearchFilter;
 
     // Appel au service pour les résultats et la mesure de performance
-    this.incidentService.searchWithTiming(filters).subscribe({
+    this.incidentService.searchWithTiming(filters, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
-        console.log('1. Réponse brute API:', response);
-        this.results = [...response.data];
-        console.log('2. Contenu de this.results:', this.results);
+        this.results = [...response.page.content];
+        this.totalElements = response.page.totalElements;
+        this.totalPages = response.page.totalPages;
 
         // Temps de calcul côté front
         this.searchDuration = response.duration;
@@ -60,5 +70,11 @@ export class AppComponent {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  // Méthode pour changer de page
+  changePage(delta: number) {
+    this.currentPage += delta;
+    this.onSearch(false); // false car on veut garder les filtres actuels
   }
 }

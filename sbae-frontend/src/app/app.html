@@ -47,6 +47,7 @@
 
   @if (searchDuration !== null){
     <div class="stats-panel">
+      <strong>{{ totalElements | number }}</strong> incidents trouvés.
       Dernière requête exécutée en : <strong>{{ searchDuration | number:'1.3-3' }} secondes</strong>.
     </div>
   }
@@ -67,9 +68,9 @@
           <tr>
             <td>{{ incident?.title }}</td>
             <td>
-            <span class="severity-tag" [attr.data-severity]="incident.severity">
-              {{ incident?.severity }}
-            </span>
+              <span class="severity-tag" [attr.data-severity]="incident.severity">
+                {{ incident?.severity }}
+              </span>
             </td>
             <td>{{ incident?.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>{{ incident?.person?.lastName }} {{ incident?.person?.firstName }}</td>
@@ -83,4 +84,25 @@
       </tbody>
     </table>
   </div>
+
+  @if (totalPages > 1) {
+    <div class="pagination-actions" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px;">
+      <button class="btn-pagination"
+              (click)="changePage(-1)"
+              [disabled]="loading || currentPage === 0">
+        &laquo; Précédent
+      </button>
+
+      <span class="page-info">
+        Page <strong>{{ currentPage + 1 }}</strong> sur {{ totalPages }}
+      </span>
+
+      <button class="btn-pagination"
+              (click)="changePage(1)"
+              [disabled]="loading || (currentPage + 1) >= totalPages">
+        Suivant &raquo;
+      </button>
+    </div>
+  }
+
 </div>

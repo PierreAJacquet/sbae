@@ -66,7 +66,7 @@ L'interface utilisateur nécessite Node.js 20+ et Npm.
 | **Stream Java (Initial)** | **3.488s**  |     -     |
 | **@Query SQL (Optimisé)** | **2.389s**  | **31,5%** |
 
-> **Analyse** : Le moteur SQL est conçu pour filtrer des millions de lignes via des algorithmes optimisés. Réduction importante du nombre de requêtes.
+> **Analyse technique** : Le moteur SQL est conçu pour filtrer des millions de lignes via des algorithmes optimisés. Réduction importante du nombre de requêtes.
 
 #### ⚡ Étape 2 : Indexation des colonnes (PostgreSQL Indexing)
 
@@ -81,4 +81,23 @@ L'interface utilisateur nécessite Node.js 20+ et Npm.
 | **Filtrage SQL + Indexation** | **1.589s**  | **33,5%** |
 
 > **Analyse technique** : L'index GIN permet à PostgreSQL de découper les mots en trigrammes. Lors d'une recherche, le moteur ne parcourt plus la table mais consulte l'index, ce qui réduit la complexité de recherche de manière drastique, surtout sur des volumes de 100 000+ lignes.
+
+#### 🏆 Étape 3 : Optimisation du flux de données (Pagination back to front)
+
+* **Mécanisme** : Implémentation de la pagination serveur via Spring Data Pageable et transformation des entités en DTO à la volée.
+* **Impact** : Réduction massive de la charge réseau et du rendu DOM. Le serveur ne renvoie plus 15 Mo de JSON, mais seulement 2 Ko par page (10 résultats).
+* **Correction** : Utilisation de Page.map() côté Service pour transformer uniquement les objets visibles, préservant les ressources CPU du serveur.
+* **Amélioration** : Rendu du tableau adapté à la pagination.
+* **Test** : Pour les deux scénarios de mesure, demande de récupération de l'ensemble des lignes de la base. Dans le second test, chargement de la première page de résultats (10 lignes) après filtrage sur 100 000 entrées
+
+| Méthode                             | Temps Moyen |   Gain    |
+|:------------------------------------|:-----------:|:---------:|
+| **Flux Complet (List)**             | **1.589s**  |     -     |
+| **Flux Paginé (Page, Cache Froid)** | **0.352s**  | **77,8%** |
+| **Flux Paginé (Page, Cache Chaud)** | **0.047s**  | **97,0%** |
+
+> **Analyse de la variance** : On observe une fluctuation entre 0.352s (Premier accès/Cache froid) et 0.047s (Accès répété/Cache chaud). Cette stabilité sous la barre des 0.5s garantit une expérience utilisateur fluide, même dans le scénario le moins favorable.
+
+> **Analyse technique** : Cette étape est la clé de la scalabilité. Sans elle, l'application s'effondrerait avec 1 million de lignes, même avec des index parfaits. Avec la pagination, le coût de traitement devient constant, quel que soit le volume total de la base de données.
+
 
